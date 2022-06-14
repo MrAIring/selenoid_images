@@ -6,6 +6,7 @@ FILE_NAME=${FILE_NAME:-"video.mp4"}
 FRAME_RATE=${FRAME_RATE:-"12"}
 CODEC=${CODEC:-"libx264"}
 PRESET=${PRESET:-"ultrafast"}
+NICE=${NICE:-"19"}
 if [ "$CODEC" == "libx264" -a -n "$PRESET" ]; then
     PRESET="-preset $PRESET"
 fi
@@ -36,7 +37,7 @@ echo -n 'gIvST5iz2S0J1+JlXC1lD3HWvg61vDTV1xbmiGxZnjB6E3psXsjWUVQS4SRrch6rygQgtpw
 export PULSE_SERVER=${BROWSER_CONTAINER_NAME}
 
 if pactl info >/dev/null 2>&1; then
-  exec nice -n 19 ffmpeg -f pulse -i default -y -f x11grab -video_size ${VIDEO_SIZE} -r ${FRAME_RATE} ${INPUT_OPTIONS} -i ${BROWSER_CONTAINER_NAME}:${DISPLAY} -codec:v ${CODEC} -preset ultrafast -pix_fmt yuv420p -filter:v "pad=ceil(iw/2)*2:ceil(ih/2)*2" "/data/$FILE_NAME"
+  exec nice -n ${NICE} ffmpeg -f pulse -i default -y -f x11grab -video_size ${VIDEO_SIZE} -r ${FRAME_RATE} ${INPUT_OPTIONS} -i ${BROWSER_CONTAINER_NAME}:${DISPLAY} -codec:v ${CODEC} ${PRESET} -pix_fmt yuv420p -filter:v "pad=ceil(iw/2)*2:ceil(ih/2)*2" "/data/$FILE_NAME"
 else
-  exec nice -n 19 ffmpeg -y -f x11grab -video_size ${VIDEO_SIZE} -r ${FRAME_RATE} ${INPUT_OPTIONS} -i ${BROWSER_CONTAINER_NAME}:${DISPLAY} -codec:v ${CODEC} -preset ultrafast -pix_fmt yuv420p -filter:v "pad=ceil(iw/2)*2:ceil(ih/2)*2" "/data/$FILE_NAME"
+  exec nice -n ${NICE} ffmpeg -y -f x11grab -video_size ${VIDEO_SIZE} -r ${FRAME_RATE} ${INPUT_OPTIONS} -i ${BROWSER_CONTAINER_NAME}:${DISPLAY} -codec:v ${CODEC} ${PRESET} -pix_fmt yuv420p -filter:v "pad=ceil(iw/2)*2:ceil(ih/2)*2" "/data/$FILE_NAME"
 fi
